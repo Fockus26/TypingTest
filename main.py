@@ -50,6 +50,7 @@ class TypingTest:
         self.result.grid(column=2, row=4, pady=(40, 0))
 
     def create_gui(self):
+        """Crea la interfaz del usuario"""
         icon = CTkImage(Image.open("img/icon.ico"), size=(40, 40))
         icon = CTkLabel(self.frame, text="", image=icon, width=icon.cget("size")[0], height=icon.cget("size")[1])
         icon.grid(column=0, row=0, pady=(10, 40))
@@ -77,6 +78,7 @@ class TypingTest:
         start_button.grid(column=3, row=3)
 
     def next_word(self, event):
+        """Cuando oprimes la barra espaciadora avanza a la siguiente palabra, y suma si es correcta o incorrecta la respuesta"""
         typed_word = self.entry_word.get().strip(" ")
         self.typing_list.append(typed_word)
         self.entry_word.delete(0, END)
@@ -93,6 +95,8 @@ class TypingTest:
         self.show_next_word.configure(text=self.word_list[self.number_word + 1])
 
     def back_word(self, event):
+        """Regresa a la anterior palbra y la elimina de la lista de plabras escritas siempre y cuando la anterior palbra
+        haya sido incorrecta y presiones retroceso en el indice 0"""
         current_position = self.entry_word.index(INSERT)
         if self.number_word > 0 and current_position == 0:
             if self.word_list[self.number_word - 1] != self.typing_list[self.number_word - 1]:
@@ -103,7 +107,9 @@ class TypingTest:
                 self.entry_word.insert(0, self.typing_list[self.number_word])
                 self.typing_list.remove(self.typing_list[self.number_word])
 
-    def show_response(self, response=None):
+    def show_response(self, response: str = None):
+        """Si la respuesta ha sido correcta o incorrecta alumbra el borde de donde estas escribiendo para saber si lo
+        hiciste bien o mal"""
         if response == "Correct":
             self.entry_word.configure(border_color="#43ffaf")
         elif response == "Incorrect":
@@ -115,6 +121,7 @@ class TypingTest:
         self.change_color = self.app.after(200, self.show_response)
 
     def select_timer(self, time):
+        """Modifica el tiempo que va durar la prueba, y si la prueba se esta ejecutando la cancela"""
         self.preset_time = time
         self.label_count.configure(text=str(time))
         try:
@@ -124,6 +131,8 @@ class TypingTest:
             pass
 
     def preset(self):
+        """Establece los valores por default, ya sea esconder un widget, o capturar los valores iniciales como el
+        number_word que es el indice de las listas o el preset_timer que es el timer que se uso al inicio"""
         shuffle(self.word_list)
 
         self.entry_word.configure(state="normal")
@@ -148,6 +157,7 @@ class TypingTest:
             self.entry_word.bind("<BackSpace>", self.back_word)
 
         def start_test():
+            """Reduce un segundo al preset_time y si llega a 0 calcula y muestra el resultado de tu prueba"""
             self.time -= 1
             self.label_count.configure(text=str(self.time))
             if self.time > 0:
@@ -172,6 +182,7 @@ class TypingTest:
         start_test()
 
     def run(self):
+        """Inicia la app"""
         self.app.mainloop()
 
 
